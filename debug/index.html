@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIC Debug</title>
+    <style>
+    #output {
+	overflow: auto;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 70px;
+	font-family: sans-serif;
+	background: black;
+	color: #39ff14;
+   }
+
+    #output div {
+	margin: 10px;
+  	margin-top: 10px;
+  	margin-bottom: 10px;
+	margin-top: 3px;
+	margin-bottom: 0;
+    }
+
+    #input {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 70px;
+    }
+    </style>
+</head>
+<body>
+    <div id="output"></div>
+    <div id="input"><input id="target" type="text"/><input id="targetgroup" type="text"/><input id="message" type="text"><input id="send" type="button" value="Send"></div>
+
+    <script src="/js/AccessNode.js"></script>
+    <script>
+	var b = document.getElementById("output");
+	var t = document.getElementById("target");
+	var tg = document.getElementById("targetgroup");
+	var msg  = document.getElementById("message");
+	var send = document.getElementById("send");	
+
+	var datetimeFormatter = new Intl.DateTimeFormat('de-DE',{hour: 'numeric', minute: 'numeric', second: 'numeric'});
+
+	function append(data) {
+		let tmp = document.createElement("div");
+
+		if (data.target == "debug") tmp.style.fontWeight = "bold";
+
+		tmp.innerText = "["+datetimeFormatter.format(new Date())+"]  "+ data.origin + "@" + data.origingroup +">" + data.target+"@"+data.targetgroup + ":" + data.message;
+		
+		b.appendChild(tmp);
+		tmp.scrollIntoView();
+	}
+
+        let ric = new RobotikInterConnect("raspberrypi.local",5678, "w", "debug", append);
+	
+	send.addEventListener("click",()=>{ ric.send(t.value,tg.value,msg.value); });
+    </script>
+</body>
+</html>

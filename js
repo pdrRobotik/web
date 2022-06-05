@@ -1,0 +1,1 @@
+/srv/RIC/RobotikInterConnect/client/javascript/
