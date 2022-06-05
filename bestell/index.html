@@ -97,19 +97,28 @@
 	var green = document.getElementById("gruen");
 	var blue = document.getElementById("blau");
 
+	var decode = { r: "rot",g: "grün",b: "blau" };
+
 	function set_order(data) {
-		order_element.innerText = "Letzte Order Nummer: "+data;
+		let data_split = data.split(",");
+		let number = data_split[0];
+		let color = data_split[1];
+
+		if (color in decode) color = decode[color];
+
+		order_element.innerText = "Danke für ihre Bestellung! Die gewählte Farbe war "+color+" und ihre Bestellnummer ist "+number;
+		alert("Danke für ihre Bestellung! Die gewählte Farbe war "+color+" und ihre Bestellnummer ist "+number);
 	}
 
     let ric = new RobotikInterConnect(window.location.hostname,5678, "n", "bestell", set_order);
 
-	red.addEventListener("click",()=>{ric.send("mfc","websocket","r");});
-	green.addEventListener("click",()=>{ric.send("mfc","websocket","g");});
-	blue.addEventListener("click",()=>{ric.send("mfc","websocket","b");});
+	red.addEventListener("touchend",()=>{ric.send("mfc","websocket","r");});
+	green.addEventListener("touchend",()=>{ric.send("mfc","websocket","g");});
+	blue.addEventListener("touchend",()=>{ric.send("mfc","websocket","b");});
 
-	//red.addEventListener("click",()=>{ric.send("greifarm","serial","r");});
-	//green.addEventListener("click",()=>{ric.send("greifarm","serial","g");});
-	//blue.addEventListener("click",()=>{ric.send("greifarm","serial","b");});
+	red.addEventListener("mouseup",()=>{ric.send("mfc","websocket","r");});
+	green.addEventListener("mouseup",()=>{ric.send("mfc","websocket","g");});
+	blue.addEventListener("mouseup",()=>{ric.send("mfc","websocket","b");});
 
     </script>
 </body>
