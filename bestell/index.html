@@ -78,9 +78,39 @@
 	#blau { background: rgb(0, 0, 255); }
 	#blau:active { background: rgb(0, 0, 221); }
 
+	.overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        z-index: 1000;
+        background-color: black;
+        opacity: 0.7;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .overlay div {
+        color: white;
+        font-size: 30px;
+        font-weight: bold;
+        font-family: sans-serif;
+    }
+
+    .hidden {
+        display: none;
+    }
     </style>
 </head>
 <body>
+	<div class="overlay hidden noselect">
+        <div>Bitte warten</div>
+    </div>
+
     <div id="order_nummer" >123</div>
     <div id="bestell" class="noselect">
 	<div class="button" id="rot"><span>ROT BESTELLEN</span></div>
@@ -90,6 +120,11 @@
 
     <script src="/js/AccessNode.js"></script>
     <script>
+		function sleep(ms) {
+			return new Promise(resolve => setTimeout(resolve, ms));
+		}
+
+	var overlay = document.querySelector(".overlay");
 	var bestell = document.getElementById("bestell");
         var order_element = document.getElementById("order_nummer");
 
@@ -112,9 +147,21 @@
 
     let ric = new RobotikInterConnect(window.location.hostname,5678, "n", "bestell", set_order);
 
-	red.addEventListener("click",()=>{ric.send("mfc","websocket","r");});
-	green.addEventListener("click",()=>{ric.send("mfc","websocket","g");});
-	blue.addEventListener("click",()=>{ric.send("mfc","websocket","b");});
+	red.addEventListener("click",()=>{
+		ric.send("mfc","websocket","r"); 
+		overlay.classList.remove("hidden"); 
+		sleep(10000).then(()=>{ overlay.classList.add("hidden"); }); 
+	});
+	green.addEventListener("click",()=>{
+		ric.send("mfc","websocket","g"); 
+		overlay.classList.remove("hidden"); 
+		sleep(10000).then(()=>{ overlay.classList.add("hidden"); }); 
+	});
+	blue.addEventListener("click",()=>{
+		ric.send("mfc","websocket","b"); 
+		overlay.classList.remove("hidden"); 
+		sleep(10000).then(()=>{ overlay.classList.add("hidden"); }); 
+	});
 
     </script>
 </body>

@@ -81,7 +81,7 @@
 
         z-index: 1000;
         background-color: black;
-        opacity: 0.2;
+        opacity: 0.7;
 
         display: flex;
         justify-content: center;
@@ -101,7 +101,7 @@
     </style>
 </head>
 <body>
-    <div class="overlay">
+    <div class="overlay hidden noselect">
         <div>Ihre Bestellung wird zeitnah ausgegeben.</div>
     </div>
 
@@ -157,13 +157,13 @@
             new_div.id = number;
 
             new_div.addEventListener("click",()=>{
-                overlay.classList.add("hidden");
+                overlay.classList.remove("hidden");
                 ric.send("mfc","websocket",""+fach);
             });
 
             done_list.appendChild(new_div);
         } else {
-            overlay.classList.remove("hidden");
+            overlay.classList.add("hidden");
         }//Sonnst z.B. bei "n" wird nur gelöscht.
 
 		
