@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abholsystem</title>
+    <style>
+	.noselect {
+		-webkit-touch-callout: none; /* iOS Safari */
+		-webkit-user-select: none; /* Safari */
+		-khtml-user-select: none; /* Konqueror HTML */
+		-moz-user-select: none; /* Old versions of Firefox */
+		-ms-user-select: none; /* Internet Explorer/Edge */
+		user-select: none; /* Non-prefixed version, currently
+								supported by Chrome, Edge, Opera and Firefox */
+	}
+
+    .outer {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 50%;
+
+        display: flex;
+        justify-content: center;
+        background-color: lightgray;
+        flex-direction: column;
+    }
+
+    #pending {
+        border-right: 1px solid black;
+        left: 0;
+    }
+
+    #done {
+        border-left: 1px solid black;
+        right: 0;
+    }
+
+    .title {
+        font-size: 24px;
+        font-weight: bold;
+        font-family: sans-serif;
+        text-align: center;
+    }
+
+    .list {
+        height: 100%;
+        width: auto;
+        display: grid;
+        padding: 12px;
+
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 6px;
+        grid-auto-rows: 40px;
+    }
+
+    .element {
+        color: white;
+        font-family: sans-serif;
+        font-weight: bold;
+        text-align: center;
+        padding: 6px;
+    }
+
+    #done .element {
+        cursor: pointer;
+    }
+
+    .r { background-color: red;}
+    .g { background-color: green;}
+    .b { background-color: blue; }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        z-index: 1000;
+        background-color: black;
+        opacity: 0.2;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .overlay div {
+        color: white;
+        font-size: 30px;
+        font-weight: bold;
+        font-family: sans-serif;
+    }
+
+    .hidden {
+        display: none;
+    }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div>Ihre Bestellung wird zeitnah ausgegeben.</div>
+    </div>
+
+    <div class="outer noselect" id="pending">
+        <div class="title">In Bearbeitung</div>
+        <div class="list">
+            <div id="4" class="element b">4</div>
+            <div id="5" class="element r">5</div>
+        </div>
+    </div>
+    <div class="outer noselect" id="done">
+        <div class="title">Zur Abholung bereit</div>
+        <div class="list">
+            <div id="0" class="element r">0</div>
+            <div id="1" class="element g">1</div>
+            <div id="2" class="element b">2</div>
+            <div id="3" class="element b">3</div>
+            <div id="0" class="element r">0</div>
+            <div id="1" class="element g">1</div>
+        </div>
+    </div>
+
+    <script src="/js/AccessNode.js"></script>
+    <script>
+    var overlay = document.querySelector(".overlay");
+	var pending_list = document.querySelector("#pending list");
+    var done_list =  document.querySelector("#done list");
+
+	function order_stuff(data) {
+		let data_split = data.split(",");
+		let number = data_split[0];
+		let color = data_split[1];
+        let where = data_split[2];
+        let fach = data_split[3];
+
+        document.getElementById(number).remove();
+
+
+
+        if (where == "p") {
+            let new_div = document.createElement("div");
+            new_div.classList.add("element");
+            new_div.classList.add(color);
+            new_div.innerText = number;
+            new_div.id = number;
+
+            pending_list.appendChild(new_div);
+        } else if (where == "a") {
+            let new_div = document.createElement("div");
+            new_div.classList.add("element");
+            new_div.classList.add(color);
+            new_div.innerText = number;
+            new_div.id = number;
+
+            new_div.addEventListener("click",()=>{
+                overlay.classList.add("hidden");
+                ric.send("mfc","websocket",""+fach);
+            });
+
+            done_list.appendChild(new_div);
+        } else {
+            overlay.classList.remove("hidden");
+        }//Sonnst z.B. bei "n" wird nur gelöscht.
+
+		
+
+
+	}
+
+    let ric = new RobotikInterConnect(window.location.hostname,5678, "n", "abhol", order_stuff);
+    ric.send("mfc","websocket","resend");
+
+    </script>
+</body>
+</html>

@@ -112,13 +112,9 @@
 
     let ric = new RobotikInterConnect(window.location.hostname,5678, "n", "bestell", set_order);
 
-	red.addEventListener("touchend",()=>{ric.send("mfc","websocket","r");});
-	green.addEventListener("touchend",()=>{ric.send("mfc","websocket","g");});
-	blue.addEventListener("touchend",()=>{ric.send("mfc","websocket","b");});
-
-	red.addEventListener("mouseup",()=>{ric.send("mfc","websocket","r");});
-	green.addEventListener("mouseup",()=>{ric.send("mfc","websocket","g");});
-	blue.addEventListener("mouseup",()=>{ric.send("mfc","websocket","b");});
+	red.addEventListener("click",()=>{ric.send("mfc","websocket","r");});
+	green.addEventListener("click",()=>{ric.send("mfc","websocket","g");});
+	blue.addEventListener("click",()=>{ric.send("mfc","websocket","b");});
 
     </script>
 </body>
